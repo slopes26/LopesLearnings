@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First 30 Days · Insight Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-forest: #103426; --color-teal: #00d2b9; --color-navy: #041b2e;
+  --color-cloud: #f1f5f8; --color-silver: #d2dee7; --color-mint: #b8efe6;
+  --color-sand: #ebd5ba; --color-sky: #b0ceef; --color-purple: #916fef;
+  --color-clay: #b36526; --color-merlot: #68003b; --color-yellow: #e0b642;
+  --color-sunburn: #fbd6d3; --color-black: #000000; --color-white: #ffffff;
+  --color-greys-200: #e5e7eb; --color-greys-300: #d1d5db;
+  --color-greys-500: #6b7280; --color-greys-700: #374151; --color-greys-800: #1f2937;
+  --font-primary: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  --font-secondary: "IBM Plex Serif", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-pill: 50px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: var(--font-secondary); font-size: 16px; line-height: 1.5; background: var(--color-cloud); color: var(--color-black); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.page { max-width: 880px; margin: 0 auto; }
+
+/* HERO */
+.hero { background: var(--color-forest); color: var(--color-white); padding: 56px 40px 40px; border-radius: 0 0 24px 24px; margin-bottom: 24px; position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(0,210,185,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 16px; display: flex; align-items: center; gap: 10px; }
+.eyebrow.on-dark { color: var(--color-teal); }
+.eyebrow::before { content: ""; width: 20px; height: 1px; background: currentColor; opacity: 0.5; }
+.hero h1 { font-family: var(--font-primary); font-weight: 500; font-size: 44px; line-height: 1; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--color-white); }
+.hero .lede { font-family: var(--font-secondary); font-size: 18px; line-height: 1.55; color: rgba(255,255,255,0.85); max-width: 620px; margin: 0; }
+.hero .stats { display: flex; gap: 40px; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+.stat .value { font-family: var(--font-primary); font-weight: 500; font-size: 24px; color: var(--color-teal); letter-spacing: -0.01em; }
+
+/* PANELS (legend, in-flight, integrity) */
+.panel { background: var(--color-white); border: 1px solid var(--color-silver); border-radius: var(--radius-lg); padding: 20px 24px; margin: 0 24px 16px; }
+.panel-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-greys-500); margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+.panel-label .accent-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-teal); }
+.panel-subtitle { font-family: var(--font-secondary); font-size: 14px; color: var(--color-greys-700); margin: 0 0 16px; line-height: 1.5; }
+
+/* LEGEND */
+.legend-items { display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-greys-700); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-darren { background: var(--color-teal); }
+.dot-apr13 { background: var(--color-forest); }
+.dot-kelly { background: var(--color-purple); }
+.dot-leadership { background: var(--color-navy); }
+.dot-catalyst { background: var(--color-merlot); }
+.dot-sarah-gpt { background: var(--color-clay); }
+.dot-onboarding { background: var(--color-sand); border: 1px solid var(--color-greys-300); }
+.dot-steven { background: var(--color-sky); border: 1px solid var(--color-greys-300); }
+
+/* IN-FLIGHT PANEL */
+.inflight-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.inflight-item { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; padding: 12px 14px; background: var(--color-cloud); border-radius: var(--radius-sm); align-items: start; }
+.inflight-title { font-family: var(--font-primary); font-weight: 500; font-size: 14px; color: var(--color-black); margin: 0 0 4px; line-height: 1.35; }
+.inflight-meta { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-greys-500); display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.inflight-meta .sep { color: var(--color-greys-300); }
+.inflight-status { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 50px; background: var(--color-mint); color: var(--color-forest); white-space: nowrap; align-self: start; }
+.inflight-status.waiting { background: var(--color-sunburn); color: #5a1a12; }
+.inflight-status.mine { background: var(--color-sky); color: var(--color-navy); border: 1px solid var(--color-navy); }
+
+/* INTEGRITY */
+.integrity { border-left: 3px solid var(--color-yellow); background: #fff9e6; border-color: #f5e6a8; }
+.integrity .panel-label { color: #6b5410; }
+.integrity .panel-label .accent-dot { background: var(--color-yellow); }
+.integrity ul { margin: 0; padding: 0; list-style: none; }
+.integrity li { font-family: var(--font-secondary); font-size: 14px; line-height: 1.55; color: var(--color-greys-800); padding: 6px 0; display: flex; gap: 10px; }
+.integrity li::before { content: "!"; font-family: var(--font-mono); font-weight: 600; font-size: 12px; color: #8a6a12; flex-shrink: 0; margin-top: 3px; }
+
+/* CONTENT */
+.content { padding: 0 24px 80px; }
+
+/* BUCKET */
+.bucket { background: var(--color-white); border: 1px solid var(--color-silver); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; transition: border-color 0.3s var(--ease-out); }
+.bucket:hover { border-color: var(--color-greys-300); }
+.bucket.open { border-color: var(--color-forest); }
+.bucket-header { width: 100%; padding: 24px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; border: none; background: transparent; cursor: pointer; text-align: left; font-family: inherit; transition: background 0.3s var(--ease-out); }
+.bucket-header:hover { background: var(--color-cloud); }
+.bucket-header-left { flex: 1; min-width: 0; }
+.bucket-eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-greys-500); margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.bucket-number { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--color-forest); color: var(--color-white); border-radius: 50%; font-size: 11px; font-weight: 500; }
+.bucket-title { font-family: var(--font-primary); font-weight: 500; font-size: 26px; line-height: 1.05; letter-spacing: -0.015em; margin: 0 0 8px; color: var(--color-black); display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.count-pill { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; background: var(--color-teal); color: var(--color-forest); padding: 3px 10px; border-radius: 50px; text-transform: uppercase; }
+.bucket-subtitle { font-family: var(--font-secondary); font-size: 15px; line-height: 1.5; color: var(--color-greys-700); margin: 0; }
+.chevron { flex-shrink: 0; color: var(--color-greys-500); transition: transform 0.3s var(--ease-out); margin-top: 24px; }
+.bucket.open .chevron { transform: rotate(90deg); color: var(--color-forest); }
+.bucket-body { display: none; padding: 0 28px 28px; }
+.bucket.open .bucket-body { display: block; }
+
+/* WHY BOX */
+.why-box { background: var(--color-cloud); border-left: 3px solid var(--color-teal); padding: 18px 20px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 0 0 28px; }
+.why-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-forest); margin: 0 0 8px; }
+.why-box p { font-family: var(--font-secondary); font-size: 16px; line-height: 1.55; margin: 0 0 10px; color: var(--color-black); }
+
+/* SECTIONS */
+.section { padding-top: 24px; margin-top: 24px; border-top: 1px solid var(--color-greys-200); }
+.section:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+.section-eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-greys-500); margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+.section-eyebrow .count { color: var(--color-greys-300); font-weight: 400; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 50px; background: var(--color-mint); color: var(--color-forest); display: inline-flex; align-items: center; gap: 6px; }
+.tag.tag-tien { background: #e5dbfd; color: #3c3489; }
+.tag .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-teal); }
+.tag.tag-tien .dot { background: var(--color-purple); }
+
+/* LIST + SOURCE TAG */
+.list { list-style: none; padding: 0; margin: 0; }
+.list-item { display: flex; gap: 14px; padding: 12px 0; }
+.list-item + .list-item { border-top: 1px solid var(--color-greys-200); }
+.list-icon { flex-shrink: 0; margin-top: 4px; width: 16px; height: 16px; }
+.icon-known { color: var(--color-teal); }
+.icon-whitespace { color: var(--color-silver); }
+.list-content { flex: 1; min-width: 0; }
+.list-text { font-family: var(--font-secondary); font-size: 15px; line-height: 1.55; color: var(--color-greys-800); margin: 0 0 6px; }
+.source-tag { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-greys-500); display: inline-flex; align-items: center; gap: 8px; }
+.source-tag::before { content: ""; width: 14px; height: 1px; background: currentColor; opacity: 0.4; }
+.source-tag .src-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* FINDINGS */
+.finding { background: #fefaed; border: 1px solid var(--color-sand); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; position: relative; }
+.finding-text { font-family: var(--font-secondary); margin: 0 32px 8px 0; font-size: 15px; line-height: 1.5; color: var(--color-black); }
+.finding-meta { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-greys-500); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.finding-meta .sep { color: var(--color-greys-300); }
+.finding-tag { background: var(--color-mint); color: var(--color-forest); padding: 2px 8px; border-radius: 4px; }
+.finding-delete { position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; color: var(--color-greys-500); padding: 4px; border-radius: 4px; display: flex; }
+.finding-delete:hover { color: var(--color-black); background: rgba(0,0,0,0.04); }
+
+/* ADD FORM */
+.add-btn { width: 100%; padding: 16px; background: transparent; border: 1px dashed var(--color-silver); border-radius: var(--radius-md); font-family: var(--font-primary); font-weight: 500; font-size: 14px; color: var(--color-greys-700); cursor: pointer; transition: all 0.3s var(--ease-out); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+.add-btn:hover { background: var(--color-cloud); border-color: var(--color-forest); border-style: solid; color: var(--color-forest); }
+.add-form { background: var(--color-cloud); border: 1px solid var(--color-silver); border-radius: var(--radius-md); padding: 20px; margin-top: 4px; }
+.form-label { display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-greys-500); margin: 0 0 8px; }
+.form-label + .form-label { margin-top: 14px; }
+.add-form textarea, .add-form input { width: 100%; padding: 11px 14px; border: 1px solid var(--color-silver); border-radius: var(--radius-sm); font-family: var(--font-secondary); font-size: 15px; background: var(--color-white); color: var(--color-black); transition: border-color 0.2s var(--ease-out); }
+.add-form textarea:focus, .add-form input:focus { outline: none; border-color: var(--color-forest); }
+.add-form textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+.add-form textarea::placeholder, .add-form input::placeholder { color: var(--color-greys-500); font-style: italic; }
+.tag-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.tag-option { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 11px; border-radius: 50px; background: var(--color-white); border: 1px solid var(--color-silver); color: var(--color-greys-700); cursor: pointer; transition: all 0.2s var(--ease-out); }
+.tag-option:hover { border-color: var(--color-forest); color: var(--color-forest); }
+.tag-option.active { background: var(--color-mint); border-color: var(--color-forest); color: var(--color-forest); }
+.form-actions { display: flex; gap: 10px; }
+.btn { font-family: var(--font-primary); font-weight: 500; font-size: 14px; border-radius: var(--radius-pill); padding: 12px 22px; cursor: pointer; border: 2px solid var(--color-black); transition: all 0.3s var(--ease-out); line-height: 1; }
+.btn-primary { background: var(--color-black); color: var(--color-white); }
+.btn-primary:hover:not(:disabled) { background: var(--color-white); color: var(--color-black); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-outline { background: transparent; color: var(--color-black); }
+.btn-outline:hover { background: var(--color-black); color: var(--color-white); }
+
+footer { margin-top: 24px; padding: 32px 8px; font-family: var(--font-secondary); font-size: 13px; color: var(--color-greys-500); text-align: center; line-height: 1.5; }
+footer strong { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-forest); font-weight: 500; }
+
+@media (max-width: 640px) {
+  .hero { padding: 40px 24px 32px; border-radius: 0 0 16px 16px; margin-bottom: 16px; }
+  .hero h1 { font-size: 30px; }
+  .hero .lede { font-size: 16px; }
+  .hero .stats { gap: 20px; }
+  .stat .value { font-size: 20px; }
+  .panel { margin: 0 16px 12px; padding: 16px 18px; }
+  .legend-items { gap: 10px 14px; }
+  .inflight-item { grid-template-columns: 1fr; }
+  .content { padding: 0 16px 60px; }
+  .bucket-header { padding: 20px; gap: 12px; }
+  .bucket-title { font-size: 22px; }
+  .bucket-subtitle { font-size: 14px; }
+  .bucket-body { padding: 0 20px 20px; }
+  .why-box { padding: 14px 16px; }
+  .why-box p { font-size: 15px; }
+  .list-text { font-size: 14px; }
+  .source-tag { font-size: 9px; }
+  .add-form { padding: 16px; }
+  .form-actions { flex-direction: column; }
+  .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="eyebrow on-dark">FIRST 30 DAYS · INSIGHT MAP · V3</p>
+    <h1>What I know. Where I still need to look.</h1>
+    <p class="lede">Six buckets, eight sources, and a running view of work already in motion I should plug into. Every point carries its source so the map is auditable and I can see where I'm leaning on signal vs. assumption.</p>
+    <div class="stats">
+      <div class="stat"><span class="label">Buckets</span><span class="value">6</span></div>
+      <div class="stat"><span class="label">Sources feeding the map</span><span class="value">8</span></div>
+      <div class="stat"><span class="label">Findings logged</span><span class="value" id="stat-findings">0</span></div>
+    </div>
+  </header>
+
+  <!-- LEGEND -->
+  <div class="panel">
+    <p class="panel-label"><span class="accent-dot"></span>Sources</p>
+    <div class="legend-items">
+      <span class="legend-item"><span class="legend-dot dot-darren"></span>Darren interview</span>
+      <span class="legend-item"><span class="legend-dot dot-leadership"></span>Apr 20 leadership sync</span>
+      <span class="legend-item"><span class="legend-dot dot-catalyst"></span>Apr 20 catalyst review</span>
+      <span class="legend-item"><span class="legend-dot dot-sarah-gpt"></span>Apr 20 GPT workflow review</span>
+      <span class="legend-item"><span class="legend-dot dot-apr13"></span>Apr 13 workflow (Lauren)</span>
+      <span class="legend-item"><span class="legend-dot dot-kelly"></span>Friday 1:1 with Kelly</span>
+      <span class="legend-item"><span class="legend-dot dot-onboarding"></span>Onboarding docs</span>
+      <span class="legend-item"><span class="legend-dot dot-steven"></span>My week 1 view</span>
+    </div>
+  </div>
+
+  <!-- IN-FLIGHT -->
+  <div class="panel">
+    <p class="panel-label"><span class="accent-dot"></span>In flight · work I should plug into, not redo</p>
+    <p class="panel-subtitle">Parallel work already happening across the team. If I don't track this, I'll either duplicate it or get caught off guard when it ships.</p>
+    <div class="inflight-grid" id="inflight-list"></div>
+  </div>
+
+  <!-- INTEGRITY CHECK -->
+  <div class="panel integrity">
+    <p class="panel-label"><span class="accent-dot"></span>Integrity check · before I put this in front of anyone</p>
+    <ul>
+      <li>The Apr 13 workflow walkthrough is one conversation with Lauren. Most operational detail rides on her. Kelly partially confirms, but I haven't tested any of this with Sydney, Jake, or Caesar. Do that first.</li>
+      <li>"Sarah's pod outperforms the open team" is anecdotal. Lauren and Kelly both said it unprompted. I have not seen the actual pipeline data. Pull the numbers before I lean on this in any recommendation.</li>
+      <li>Dana's $400M revenue filter rationale is still missing. Asking the rep who got told "it's the cut" is not enough. I need to hear it from Dana directly.</li>
+    </ul>
+  </div>
+
+  <main class="content" id="buckets"></main>
+
+  <footer>
+    <p><strong>Working doc</strong></p>
+    <p>Findings save automatically and persist between sessions.</p>
+  </footer>
+</div>
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></symbol>
+    <symbol id="i-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  </defs>
+</svg>
+
+<script>
+const SOURCES = {
+  darren:      { label: "Darren interview",       dotClass: "dot-darren" },
+  apr13:       { label: "Apr 13 workflow (Lauren)", dotClass: "dot-apr13" },
+  kelly:       { label: "Friday 1:1 w/ Kelly",     dotClass: "dot-kelly" },
+  leadership:  { label: "Apr 20 leadership sync",  dotClass: "dot-leadership" },
+  catalyst:    { label: "Apr 20 catalyst review",  dotClass: "dot-catalyst" },
+  'sarah-gpt': { label: "Apr 20 GPT workflow review", dotClass: "dot-sarah-gpt" },
+  onboarding:  { label: "Onboarding docs",         dotClass: "dot-onboarding" },
+  steven:      { label: "My week 1 view",          dotClass: "dot-steven" }
+};
+
+const PRIORITIES = [
+  { id: 'retain',   label: 'Retain and grow customers',    type: 'darren' },
+  { id: 'pipeline', label: 'Weighted pipeline',            type: 'darren' },
+  { id: 'cfo',      label: 'CFO-level conversations',      type: 'darren' },
+  { id: 'ttv',      label: 'Time to value',                type: 'darren' },
+  { id: 'talent',   label: 'SDR talent progression',       type: 'darren' },
+  { id: 'partner',  label: 'Strategic partnership',        type: 'darren' },
+  { id: 'signal',   label: 'Signal to S0 in 30 days',      type: 'tien' },
+  { id: 'agents',   label: 'Agent-driven motion',          type: 'tien' },
+  { id: 'ai-fluency', label: 'AI fluency as an individual skill', type: 'tien' },
+  { id: 'q2',       label: 'Q2 pipeline acceleration',     type: 'ops' },
+  { id: 'huntclub', label: 'Hunt Club enablement',         type: 'ops' }
+];
+
+const INFLIGHT = [
+  { title: "Sarah and Kelly's weekly GPT account prioritization workflow", owner: "Sarah + Kelly", timing: "In production", source: "sarah-gpt", status: "active", engage: "Sit in, run Lauren's territory through it, compare outputs to Dana's filter" },
+  { title: "JB documenting catalyst data process and refresh cadence", owner: "JB", timing: "This week", source: "catalyst", status: "active", engage: "Read when it drops; brings clarity to who owns Cerebro freshness" },
+  { title: "Madison and Chris walking through GTM priority tier logic", owner: "Alex to invite", timing: "Next week", source: "catalyst", status: "waiting", engage: "Attend; this changes how I evaluate account selection" },
+  { title: "Cerebro Engage API resolution for automated sequence creation", owner: "Alex + Outreach", timing: "This week", source: "leadership", status: "waiting", engage: "Track; blocks any cohort-sequence recommendation I'd make" },
+  { title: "YES tool replacement (internal MVP)", owner: "JB + Chahal", timing: "End of month", source: "leadership", status: "active", engage: "Surface install-base use cases where exec-email matters" },
+  { title: "Assess S0 and S1 opportunities to analyze lead source mix", owner: "Me", timing: "Action item · catalyst review", source: "catalyst", status: "mine", engage: "Do this. Outputs will feed Account selection and Messaging buckets" },
+  { title: "Outreach efficacy feedback loop (what's working, what's not)", owner: "David", timing: "Ongoing", source: "catalyst", status: "active", engage: "Align on cadence; this is my early-warning system for motion drift" }
+];
+
+const BUCKETS = [
+  {
+    id: 'pipeline', num: '01', eyebrow: 'Account selection',
+    title: 'Pipeline strategy', subtitle: 'How we pick and attack accounts.',
+    why: { text: "Every other bucket compounds off this one. Get the list wrong and the motion wastes itself. Sarah and Kelly already have a working draft. My job is to make it stick and make it scale.", source: "steven" },
+    mapsTo: ['pipeline', 'retain', 'q2'],
+    known: [
+      { text: "Dana's $400M revenue filter is the current cut. Nobody in the room could articulate why. Lauren was told \"it's the cut\" and left it there.", source: "apr13" },
+      { text: "Sarah and Kelly run a weekly GPT workflow: a Cerebro catalyst file plus a Salesforce report, filtered on high intensity, AE priority A or B, multiple catalysts, S1 filing, RevRec issues, GTM T1, dead ops equals zero.", source: "sarah-gpt" },
+      { text: "The current filter excludes publishing companies and anything under $250M.", source: "sarah-gpt" },
+      { text: "Nobody on the call could explain the difference between \"closed ops\" and \"dead ops\" fields. Alex thinks dead ops is deprecated vernacular but wasn't sure.", source: "sarah-gpt" },
+      { text: "Open territory has ~4,000 accounts. Kelly believes a meaningful share aren't viable ICP.", source: "kelly" },
+      { text: "Outside core SaaS, the open book skews to manufacturing, B2C, telco, and financial services. Billion-dollar companies are hard to break into.", source: "kelly" },
+      { text: "Closed-lost (S9) opportunities are the warmest non-customers on the list and barely getting worked. Lauren agreed she should prioritize them and currently doesn't.", source: "apr13" },
+      { text: "Product persona outreach has gone 9 months with zero meetings. The play is dead, not cold.", source: "apr13" },
+      { text: "GTM priority tiers in Salesforce are still being defined. Madison and Chris are joining next week's session to walk through the tiering logic.", source: "catalyst" },
+      { text: "Revenue mix is roughly 25/75 new biz to expansion. SDRs are staffed for the 25%.", source: "darren" }
+    ],
+    whitespace: [
+      "What is the actual rationale for the $400M floor? Until I get this from Dana directly, I can't tell whether to push back or reinforce.",
+      "What does GTM tier logic look like once Madison and Chris walk us through it?",
+      "Are the Sarah/Kelly GPT outputs reliably better than Dana's filter? Run them in parallel for a week and measure.",
+      "How do we treat high-intent accounts without a Cerebro catalyst? Current filter cuts them. Catalyst call flagged this.",
+      "Does an install-base SDR motion exist today? Darren asked for one. I haven't seen evidence yet."
+    ]
+  },
+  {
+    id: 'process', num: '02', eyebrow: 'Execution',
+    title: 'Process and execution', subtitle: 'Where intended work turns into completed work.',
+    why: { text: "Effort isn't the gap. The drop between intended and completed work is where pipeline leaks. Until that closes, no upstream improvement survives the day.", source: "steven" },
+    mapsTo: ['pipeline', 'q2'],
+    known: [
+      { text: "Each manually-built outreach email takes Lauren 5 to 10 minutes, including AI assist via Glean.", source: "apr13" },
+      { text: "Sequences get built one account at a time. Lauren has never bulk-loaded contacts into a single sequence except for event invites.", source: "apr13" },
+      { text: "One sequence: 258 day-1 emails delivered, 51 day-4 calls completed. ~80% of planned calls never happened.", source: "apr13" },
+      { text: "Reps are sitting on 300 to 400 overdue call tasks, largely from stacked webinar invites.", source: "apr13" },
+      { text: "Kelly: about 90% of cold calls go to voicemail.", source: "kelly" },
+      { text: "LinkedIn replies are outperforming both phone and email across reps.", source: "kelly" },
+      { text: "Kelly is uncertain whether her emails are landing at all. Some target accounts have aggressive spam filters.", source: "kelly" },
+      { text: "Last week (week of Apr 14), the team generated zero meetings and zero pipeline. LinkedIn-only responses.", source: "sarah-gpt" },
+      { text: "Lead routing is visibly broken. Lauren and Kelly receive the same MQL with different owner fields. Manual reassignment happens about once every week or two.", source: "apr13" },
+      { text: "Day-4 calls specifically get skipped. Lauren openly: \"I probably didn't make that call on day four.\"", source: "apr13" }
+    ],
+    whitespace: [
+      "Why do day-4 calls specifically die? Calendar conflict, training gap, or the call simply not surfacing in the queue at the right time?",
+      "How much of the 51-of-258 ratio is bounced contacts vs. rep behavior? Alex said this is measurable in Outreach. Run it.",
+      "What MQL-to-SQL SLA exists today and who owns it slipping?",
+      "Is the duplicate MQL routing caused by Lean Data logic, by manual Alex fixes, or both?",
+      "What does task hygiene look like in Sarah's pod compared to ours?"
+    ]
+  },
+  {
+    id: 'operating', num: '03', eyebrow: 'Team design',
+    title: 'Operating model', subtitle: 'Pod structure, AE partnership, talent path.',
+    why: { text: "If one pod consistently outperforms with the same stack, the question isn't what works. It's why hasn't it spread. That's mine to answer. (Flagged as anecdotal until I see the pipeline data.)", source: "steven" },
+    mapsTo: ['talent', 'pipeline'],
+    known: [
+      { text: "Sarah's pod consistently outperforms the open team. Lauren and Kelly both said it unprompted.", source: "apr13" },
+      { text: "Named SDRs (Sydney, Jake) have weekly AE collaboration built in. Open SDRs (Lauren, Kelly) operate without it.", source: "apr13" },
+      { text: "Open SDRs have no dedicated AE research support. They self-serve.", source: "apr13" },
+      { text: "KPI calibration is uneven. Sydney's daily account target is 5, Lauren's is 8. No rationale Lauren has been given. Math means open reps have less time per message.", source: "apr13" },
+      { text: "Round-robin AE assignment is informal. Dana decides ad hoc: smaller accounts to Travis (newest), mid to Brian, large to Steve. Not documented.", source: "apr13" },
+      { text: "AE selective participation: Lauren cited a Twist Bioscience opportunity where the AE was hesitant to advance even though the SE said the call went well. SDR quota gets hit either way.", source: "apr13" },
+      { text: "Jake (hybrid named/open) hit quota. Caesar (senior SDR) tends to over-analyze and slow the workflow.", source: "apr13" },
+      { text: "Darren framed the talent path as \"college to pros, no minor leagues.\" No mid-market progression step exists.", source: "darren" }
+    ],
+    whitespace: [
+      "What specifically does Sarah's pod do that ours doesn't? Sequence discipline, AE rhythm, account selection, or a combination?",
+      "How much of the gap is operating model vs. rep talent? Separate before I recommend anything.",
+      "What's the formal logic for Sydney's lower KPI? Either it's defensible and Lauren needs to hear it, or it isn't and we need to realign.",
+      "Does AE selective participation show up systematically in pipeline data, or only anecdotally?",
+      "What would a mid-market SDR step look like and is there appetite to build one?"
+    ]
+  },
+  {
+    id: 'messaging', num: '04', eyebrow: 'Messaging',
+    title: 'Messaging and experimentation', subtitle: 'How the team learns what actually works.',
+    why: { text: "If every email is custom, you can't tell what works. The team is putting in real effort and learning nothing systematic from it.", source: "steven" },
+    mapsTo: ['pipeline', 'cfo'],
+    known: [
+      { text: "Heavy customization blocks A/B testing. Lauren: \"we never really sit down and look at what generates the most clicks.\"", source: "apr13" },
+      { text: "Lauren's workflow uses Glean to draft, then manual edits for tone (removing \"impressively,\" removing em dashes). Personalization is craft, not motion.", source: "apr13" },
+      { text: "Persona-specific messaging broke down. Dana wanted IT + finance variants. Lauren stopped because customization was too time-prohibitive. Now she writes one CFO-level message and sends it to everyone.", source: "apr13" },
+      { text: "Jake defaults to finance + accounting only. Sydney and Kelly mix it up more.", source: "apr13" },
+      { text: "Manufacturing messaging reads generic. Kelly: \"I don't have sequences that really tailor to them.\"", source: "kelly" },
+      { text: "Sebastian's Cerebro Engage sequence builder is in pilot. Generates a sequence per cohort using natural-language filtering, runs on Claude via AWS Bedrock.", source: "apr13" },
+      { text: "Zero meetings, zero pipeline last week with the current motion.", source: "sarah-gpt" },
+      { text: "Email deliverability is a real concern Kelly raised but hasn't been tested.", source: "kelly" },
+      { text: "Cohort logic already produces lists. \"Issues with RevRec\" returned 78 accounts. \"Open NOAM + VP filter\" returned 350 contacts. We just don't run sequences against them yet.", source: "apr13" },
+      { text: "Above-the-power-line vs. below-the-power-line sequence split was raised as foundational structure to build.", source: "leadership" }
+    ],
+    whitespace: [
+      "Is email deliverability actually healthy? Domain reputation, spam placement, warm-up status. One-day audit I haven't run.",
+      "What catalyst-based cohorts would let us run real tests? \"New CFO,\" \"S1 filed,\" \"RevRec issue announced,\" \"headcount drop.\"",
+      "What does CFO-level messaging look like today vs. ops-level? Darren wants more CFO conversations and the copy isn't reflecting that.",
+      "Which reps write the highest-converting emails and what patterns are they using? Steal and systematize.",
+      "If we move to cohort sequences via Cerebro Engage, how do we keep tracking clean? Sarah flagged sequence proliferation as a risk."
+    ]
+  },
+  {
+    id: 'systems', num: '05', eyebrow: 'Stack',
+    title: 'Systems and tooling', subtitle: 'Tool sprawl, Cerebro, data integrity.',
+    why: { text: "Tool sprawl and broken handoffs eat prospecting time. Every minute stitching tools is a minute not spent on a buyer.", source: "steven" },
+    mapsTo: ['ttv', 'pipeline'],
+    known: [
+      { text: "The motion spans Cerebro, Sales Navigator, ZoomInfo, Outreach. Four tools with manual handoffs at each step.", source: "apr13" },
+      { text: "ZoomInfo export to Salesforce frequently lags or fails silently mid-export.", source: "apr13" },
+      { text: "Some Cerebro catalyst data is stale. Nobody owns freshness. JB is documenting the catalyst data process and will share this week.", source: "catalyst" },
+      { text: "The Cerebro Engage sequence builder API is broken right now, blocking automated sequence creation. Alex is in active conversation with Outreach.", source: "leadership" },
+      { text: "YES tool is being replaced. No market parity, so JB and Chahal are spinning up an internal MVP. Target: end of month.", source: "leadership" },
+      { text: "Clay is purchased and underutilized. Alex confirmed credits available. Worth exploring for contact enrichment.", source: "apr13" },
+      { text: "Glean is the team's standard AI surface and is normalized in workflow.", source: "onboarding" },
+      { text: "Outreach has functionality to track contact history and prevent duplicate sequencing, but defaults are set by Alex and Zach. Worth re-examining.", source: "apr13" },
+      { text: "Salesforce reporting includes fit score, last activity, number of closed ops, number of dead ops. Nobody is sure which \"ops\" field to trust.", source: "sarah-gpt" }
+    ],
+    whitespace: [
+      "What is the actual end-to-end rep workflow time per account? This is the honest cost number.",
+      "When data conflicts across Cerebro, ZoomInfo, and Salesforce, which wins by policy and is that the right call?",
+      "Who owns Cerebro catalyst freshness? Until JB documents this, the answer is \"nobody.\"",
+      "What's the timeline for Cerebro Engage API resolution and YES MVP? Both block downstream improvements I'd otherwise recommend.",
+      "What's the Clay vs ZoomInfo cost tradeoff and is there a realistic case to consolidate?"
+    ]
+  },
+  {
+    id: 'ai', num: '06', eyebrow: 'AI mandate',
+    title: 'AI capability and team fluency', subtitle: "Tien's mandate. The lens everything has to pass through.",
+    why: { text: "Tien made it clear at the offsite. He isn't satisfied with an accelerated version of today. He wants signal-to-S0 in 30 days and AI fluency as a baseline individual skill. If my recommendations don't address this directly, they won't hold up against his lens.", source: "leadership" },
+    mapsTo: ['signal', 'agents', 'ai-fluency', 'huntclub'],
+    known: [
+      { text: "Tien framed the AI shift as \"take the red pill or be left behind.\" Companies that win will be AI-native or have made the pivot.", source: "leadership" },
+      { text: "Specific ask: signal to S0 in 30 days. Not by year-end.", source: "leadership" },
+      { text: "Engineering is prototyping features in days. Sales is being told to sell features that aren't built yet. That's the velocity expectation.", source: "leadership" },
+      { text: "Marketing is targeting four acceleration areas: pipeline productivity, web (5 weeks to 5 hours), campaigns, metrics and measurement.", source: "leadership" },
+      { text: "\"AI proficiency is an individual sport, not a team sport.\" Quote from Mu (engineering lead), cited by Anne as the framing for ZBR adoption.", source: "leadership" },
+      { text: "Tools access is a current bottleneck. Most ZBRs don't have Cursor, Codex, or Claude. Enterprise Claude license is in IT's queue.", source: "leadership" },
+      { text: "Anthony and I are leading the Hunt Club initiative as the vehicle for this transition.", source: "leadership" },
+      { text: "Alex's recommendation: start with Codex via the LightChat GPT license everyone already has. Friendlier than Cursor for non-developers.", source: "leadership" },
+      { text: "Cerebro Engage is the in-flight ZBR-facing AI tool. Runs on Claude via AWS Bedrock.", source: "apr13" }
+    ],
+    whitespace: [
+      "What does \"signal to S0 in 30 days\" actually look like as a concrete workflow? Need a working definition before I can build to it.",
+      "Which agents could the team realistically operate today vs. need scaffolded for? Sequence drafting and persona research seem closest.",
+      "Who in IT is the right contact to unblock tool access for ZBRs with the lowest friction?",
+      "How does the Hunt Club initiative want to measure ZBR AI proficiency? Without a metric, individual-sport framing is just rhetoric.",
+      "What's the right cadence to roll AI workflow training to the team without breaking the existing motion?"
+    ]
+  }
+];
+
+const STORAGE_KEY = 'zuora-insight-findings-v3';
+let state = { findings: {}, expanded: { pipeline: true }, addingTo: null, newFinding: { note: '', source: '', tags: [] } };
+
+async function loadState() {
+  try {
+    const result = await window.storage.get(STORAGE_KEY);
+    if (result?.value) state.findings = JSON.parse(result.value);
+  } catch (e) {}
+  render();
+}
+
+async function saveFindings() {
+  try { await window.storage.set(STORAGE_KEY, JSON.stringify(state.findings)); }
+  catch (e) { console.error('Save failed', e); }
+}
+
+function totalFindings() { return Object.values(state.findings).reduce((s, arr) => s + (arr?.length || 0), 0); }
+function priorityLabel(id) { return PRIORITIES.find(p => p.id === id)?.label || id; }
+function priorityType(id) { return PRIORITIES.find(p => p.id === id)?.type || 'darren'; }
+function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function sourceTag(id) {
+  const s = SOURCES[id];
+  if (!s) return '';
+  return `<span class="source-tag"><span class="src-dot ${s.dotClass}"></span>${escapeHtml(s.label)}</span>`;
+}
+
+function renderInflight() {
+  const container = document.getElementById('inflight-list');
+  container.innerHTML = INFLIGHT.map(item => {
+    const statusLabel = item.status === 'waiting' ? 'Waiting on others' : item.status === 'mine' ? 'Mine to run' : 'Active';
+    return `
+      <div class="inflight-item">
+        <div>
+          <p class="inflight-title">${escapeHtml(item.title)}</p>
+          <div class="inflight-meta">
+            <span>${escapeHtml(item.owner)}</span>
+            <span class="sep">·</span>
+            <span>${escapeHtml(item.timing)}</span>
+            <span class="sep">·</span>
+            <span class="source-tag" style="margin-top:0"><span class="src-dot ${SOURCES[item.source].dotClass}"></span>${escapeHtml(SOURCES[item.source].label)}</span>
+          </div>
+          <div class="inflight-meta" style="margin-top:6px; text-transform:none; letter-spacing:0; font-family:var(--font-secondary); color:var(--color-greys-700); font-size:13px;">
+            <em>How I engage:</em> ${escapeHtml(item.engage)}
+          </div>
+        </div>
+        <span class="inflight-status ${item.status}">${statusLabel}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleBucket(id) { state.expanded[id] = !state.expanded[id]; render(); }
+function startAdd(id) { state.addingTo = id; state.newFinding = { note: '', source: '', tags: [] }; render(); }
+function cancelAdd() { state.addingTo = null; state.newFinding = { note: '', source: '', tags: [] }; render(); }
+function updateFinding(field, value) { state.newFinding[field] = value; const btn = document.getElementById('save-finding-btn'); if (btn) btn.disabled = !state.newFinding.note.trim(); }
+function toggleTag(tagId) {
+  const tags = state.newFinding.tags;
+  const idx = tags.indexOf(tagId);
+  if (idx >= 0) tags.splice(idx, 1); else tags.push(tagId);
+  render();
+  const el = document.getElementById('finding-note');
+  if (el) el.focus();
+}
+
+async function saveFinding() {
+  const bucketId = state.addingTo;
+  if (!bucketId || !state.newFinding.note.trim()) return;
+  if (!state.findings[bucketId]) state.findings[bucketId] = [];
+  state.findings[bucketId].push({
+    id: Date.now(), note: state.newFinding.note.trim(),
+    source: state.newFinding.source.trim(), tags: [...state.newFinding.tags],
+    date: new Date().toISOString().slice(0, 10)
+  });
+  state.addingTo = null;
+  state.newFinding = { note: '', source: '', tags: [] };
+  await saveFindings();
+  render();
+}
+
+async function deleteFinding(bucketId, findingId) {
+  if (!state.findings[bucketId]) return;
+  state.findings[bucketId] = state.findings[bucketId].filter(f => f.id !== findingId);
+  await saveFindings();
+  render();
+}
+
+function render() {
+  document.getElementById('stat-findings').textContent = totalFindings();
+  document.getElementById('buckets').innerHTML = BUCKETS.map(renderBucket).join('');
+  if (state.addingTo) {
+    const noteEl = document.getElementById('finding-note');
+    const sourceEl = document.getElementById('finding-source');
+    if (noteEl) { noteEl.value = state.newFinding.note; noteEl.addEventListener('input', e => updateFinding('note', e.target.value)); noteEl.focus(); }
+    if (sourceEl) { sourceEl.value = state.newFinding.source; sourceEl.addEventListener('input', e => updateFinding('source', e.target.value)); }
+  }
+}
+
+function renderBucket(bucket) {
+  const isOpen = state.expanded[bucket.id];
+  const bucketFindings = state.findings[bucket.id] || [];
+  const isAdding = state.addingTo === bucket.id;
+  return `
+    <div class="bucket ${isOpen ? 'open' : ''}">
+      <button class="bucket-header" onclick="toggleBucket('${bucket.id}')">
+        <div class="bucket-header-left">
+          <p class="bucket-eyebrow"><span class="bucket-number">${bucket.num}</span>${escapeHtml(bucket.eyebrow)}</p>
+          <h2 class="bucket-title">${escapeHtml(bucket.title)}${bucketFindings.length > 0 ? `<span class="count-pill">${bucketFindings.length} logged</span>` : ''}</h2>
+          <p class="bucket-subtitle">${escapeHtml(bucket.subtitle)}</p>
+        </div>
+        <svg class="chevron" width="18" height="18"><use href="#i-chev"/></svg>
+      </button>
+      ${isOpen ? `
+        <div class="bucket-body">
+          <div class="why-box">
+            <p class="why-label">Why this bucket matters</p>
+            <p>${escapeHtml(bucket.why.text)}</p>
+            ${sourceTag(bucket.why.source)}
+          </div>
+
+          <div class="section">
+            <p class="section-eyebrow">Maps to leadership priority</p>
+            <div class="tags">${bucket.mapsTo.map(pid => {
+              const type = priorityType(pid);
+              return `<span class="tag ${type === 'tien' ? 'tag-tien' : ''}"><span class="dot"></span>${escapeHtml(priorityLabel(pid))}</span>`;
+            }).join('')}</div>
+          </div>
+
+          <div class="section">
+            <p class="section-eyebrow">What I know <span class="count">· ${bucket.known.length}</span></p>
+            <ul class="list">
+              ${bucket.known.map(item => `
+                <li class="list-item">
+                  <svg class="list-icon icon-known"><use href="#i-check"/></svg>
+                  <div class="list-content">
+                    <p class="list-text">${escapeHtml(item.text)}</p>
+                    ${sourceTag(item.source)}
+                  </div>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          <div class="section">
+            <p class="section-eyebrow">Whitespace <span class="count">· ${bucket.whitespace.length}</span></p>
+            <ul class="list">
+              ${bucket.whitespace.map(item => `
+                <li class="list-item">
+                  <svg class="list-icon icon-whitespace"><use href="#i-circle"/></svg>
+                  <div class="list-content"><p class="list-text">${escapeHtml(item)}</p></div>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          ${bucketFindings.length > 0 ? `
+            <div class="section">
+              <p class="section-eyebrow">My findings <span class="count">· ${bucketFindings.length}</span></p>
+              ${bucketFindings.map(f => `
+                <div class="finding">
+                  <p class="finding-text">${escapeHtml(f.note)}</p>
+                  <div class="finding-meta">
+                    ${f.source ? `<span>${escapeHtml(f.source)}</span><span class="sep">·</span>` : ''}
+                    <span>${escapeHtml(f.date)}</span>
+                    ${f.tags?.length ? `<span class="sep">·</span>` + f.tags.map(t => `<span class="finding-tag">${escapeHtml(priorityLabel(t))}</span>`).join('') : ''}
+                  </div>
+                  <button class="finding-delete" onclick="deleteFinding('${bucket.id}', ${f.id})" aria-label="Delete"><svg width="14" height="14"><use href="#i-x"/></svg></button>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <div class="section">
+            ${isAdding ? `
+              <div class="add-form">
+                <label class="form-label" for="finding-note">Finding</label>
+                <textarea id="finding-note" placeholder="What did I learn? Keep it specific."></textarea>
+                <label class="form-label" for="finding-source">Source</label>
+                <input type="text" id="finding-source" placeholder="1:1 with Andrea, ride-along with Sarah, Cerebro audit..." />
+                <label class="form-label">Tag to leadership priority</label>
+                <div class="tag-picker">${PRIORITIES.map(p => `<button type="button" class="tag-option ${state.newFinding.tags.includes(p.id) ? 'active' : ''}" onclick="toggleTag('${p.id}')">${escapeHtml(p.label)}</button>`).join('')}</div>
+                <div class="form-actions">
+                  <button id="save-finding-btn" class="btn btn-primary" onclick="saveFinding()" ${!state.newFinding.note.trim() ? 'disabled' : ''}>Save finding</button>
+                  <button class="btn btn-outline" onclick="cancelAdd()">Cancel</button>
+                </div>
+              </div>
+            ` : `<button class="add-btn" onclick="startAdd('${bucket.id}')"><svg width="16" height="16"><use href="#i-plus"/></svg>Log a finding</button>`}
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+renderInflight();
+loadState();
+</script>
+</body>
+</html>
